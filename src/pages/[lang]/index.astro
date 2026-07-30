@@ -56,7 +56,15 @@ const awards = (await getLocalizedCollection("awards", lang))
       </div>
       <div class="hero-visual" aria-label={lang === "zh" ? "黄彬研究方向示意" : "Bin Huang research focus"}>
         <div class="identity-orbit">
-          <span class="hb-avatar">HB</span>
+          <img
+            class="profile-avatar profile-avatar-hero"
+            src="/profile/huang-bin-avatar.jpg"
+            alt={lang === "zh" ? "黄彬个人照片" : "Portrait of Bin Huang"}
+            width="640"
+            height="640"
+            loading="eager"
+            fetchpriority="high"
+          />
           <span class="orbit-label">MULTI-AGENT</span>
           <span class="orbit-label">RAG</span>
           <span class="orbit-label">MEDICAL AI</span>

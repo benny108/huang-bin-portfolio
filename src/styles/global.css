@@ -439,6 +439,23 @@ h4 {
   transform: rotate(-5deg);
 }
 
+.profile-avatar {
+  position: relative;
+  z-index: 2;
+  display: block;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.92);
+  background: var(--night);
+  box-shadow: 0 28px 60px rgba(10, 13, 22, 0.25);
+}
+
+.profile-avatar-hero {
+  width: 148px;
+  height: 148px;
+  border-radius: 34px;
+  transform: rotate(-3deg);
+}
+
 .orbit-label {
   position: absolute;
   z-index: 3;
@@ -1437,6 +1454,20 @@ h4 {
   border-radius: var(--radius-lg);
   color: white;
   background: var(--night);
+}
+
+.profile-photo {
+  display: block;
+  object-fit: cover;
+}
+
+.profile-photo-about {
+  width: 100%;
+  max-height: 430px;
+  margin-bottom: 24px;
+  border: 1px solid var(--night-line);
+  border-radius: 18px;
+  object-position: 50% 26%;
 }
 
 .about-profile .hb-avatar {

@@ -47,7 +47,14 @@ const skills = [
   <section class="section">
     <div class="shell about-grid">
       <aside class="about-profile">
-        <span class="hb-avatar">HB</span>
+        <img
+          class="profile-photo profile-photo-about"
+          src="/profile/huang-bin.jpg"
+          alt={lang === "zh" ? "黄彬个人照片" : "Portrait of Bin Huang"}
+          width="675"
+          height="900"
+          loading="lazy"
+        />
         <h2>{lang === "zh" ? "黄彬" : "Bin Huang"}</h2>
         <p>LLM & Agent Research Engineer</p>
         <div class="profile-facts">

@@ -20,6 +20,9 @@ test("Chinese and English home pages contain the positioning", async () => {
   const en = await text("client/en/index.html");
   assert.match(zh, /把 LLM 研究做成可运行系统/);
   assert.match(en, /I turn LLM research into working systems/);
+  assert.match(zh, /\/profile\/huang-bin-avatar\.jpg/);
+  assert.match(en, /Portrait of Bin Huang/);
+  assert.equal((await stat(resolve(dist, "client/profile/huang-bin.jpg"))).isFile(), true);
 });
 
 test("primary routes and content details are generated", async () => {
