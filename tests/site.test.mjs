@@ -18,8 +18,12 @@ test("build emits Sites worker and metadata", async () => {
 test("Chinese and English home pages contain the positioning", async () => {
   const zh = await text("client/zh/index.html");
   const en = await text("client/en/index.html");
-  assert.match(zh, /把 LLM 研究做成可运行系统/);
-  assert.match(en, /I turn LLM research into working systems/);
+  assert.match(zh, /我研究 Agent 和医疗 AI/);
+  assert.match(en, /I work on Agents and medical AI/);
+  assert.match(zh, /研究、工程和产品/);
+  assert.match(en, /Research, engineering, and product/);
+  assert.match(zh, /data-ambient-toggle/);
+  assert.doesNotMatch(zh, /autoplay/);
   assert.match(zh, /\/profile\/huang-bin-avatar\.jpg/);
   assert.match(en, /Portrait of Bin Huang/);
   assert.match(zh, /<style>/);

@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { copy, languages } from "@/lib/i18n";
 import { getLocalizedCollection } from "@/lib/content";
 import type { Lang } from "@/lib/models";
+import "@/styles/academic-home.css";
 
 export function getStaticPaths() {
   return languages.map((lang) => ({ params: { lang }, props: { lang } }));
@@ -46,8 +47,61 @@ const interests = lang === "zh"
   ? ["多 Agent 协作", "RAG 与知识工程", "医疗 AI", "生成式 AI 系统", "推理优化"]
   : ["Multi-Agent Systems", "RAG & Knowledge Engineering", "Medical AI", "Generative AI Systems", "Inference Optimization"];
 const briefFacts = lang === "zh"
-  ? [["5+", "第一作者研究"], ["2.35×", "推理加速"], ["33,214", "图谱实体"]]
-  : [["5+", "first-author works"], ["2.35×", "inference speedup"], ["33,214", "KG entities"]];
+  ? [["3.98", "本科 GPA / 4.00"], ["1 / 127", "专业排名"], ["2024", "国家奖学金"]]
+  : [["3.98", "B.Eng. GPA / 4.00"], ["1 / 127", "Program rank"], ["2024", "National Scholarship"]];
+const capabilities = lang === "zh"
+  ? [
+      {
+        index: "01",
+        label: "RESEARCH",
+        title: "研究方法和实验",
+        description: "我主要研究多 Agent 和医疗 AI。工作包括问题定义、方法设计、实验分析和论文写作。",
+        metrics: [["5+", "第一作者研究"], ["8.5×", "BLEU-4 提升"]],
+        href: "/zh/research/"
+      },
+      {
+        index: "02",
+        label: "ENGINEERING",
+        title: "系统实现和性能",
+        description: "我做过知识图谱、RAG、Agent Runtime 和生成模型推理优化，习惯把实验代码整理成能反复运行的系统。",
+        metrics: [["33,214", "知识图谱实体"], ["2.35×", "推理加速"]],
+        href: "/zh/projects/"
+      },
+      {
+        index: "03",
+        label: "PRODUCT",
+        title: "产品和客户",
+        description: "做过海外客户筛选、需求沟通、产品演示和现场拓展。这段经历让我更在意技术是否真的有人愿意使用。",
+        metrics: [["12万+", "公开内容播放"], ["8台 / 4万", "销量 / 净利润"]],
+        href: "/zh/projects/nebula-overseas-gtm/"
+      }
+    ]
+  : [
+      {
+        index: "01",
+        label: "RESEARCH",
+        title: "Research methods and experiments",
+        description: "I mainly work on multi-agent systems and medical AI, including problem definition, method design, experiments, and paper writing.",
+        metrics: [["5+", "first-author works"], ["8.5×", "BLEU-4 gain"]],
+        href: "/en/research/"
+      },
+      {
+        index: "02",
+        label: "ENGINEERING",
+        title: "Systems and performance",
+        description: "I have built knowledge graphs, RAG pipelines, Agent Runtime components, and inference benchmarks, then turned the experiments into repeatable systems.",
+        metrics: [["33,214", "knowledge-graph entities"], ["2.35×", "inference speedup"]],
+        href: "/en/projects/"
+      },
+      {
+        index: "03",
+        label: "PRODUCT",
+        title: "Products and customers",
+        description: "I have worked on overseas customer research, product demos, and field outreach. It taught me to care whether someone will actually use what we build.",
+        metrics: [["120K+", "public content views"], ["8 / ¥40K", "units / net profit"]],
+        href: "/en/projects/nebula-overseas-gtm/"
+      }
+    ];
 const education = t.timeline
   .filter((item) => lang === "zh" ? item.title.includes("大学") : item.title.includes("University"))
   .map((item) => ({
@@ -65,6 +119,9 @@ const education = t.timeline
   <section class="academic-home">
     <div class="shell academic-home-grid">
       <aside class="academic-sidebar">
+        <p class="academic-profile-kicker">
+          <span></span>{lang === "zh" ? "2026 · 实习 / 合作" : "2026 · INTERNSHIPS / COLLABORATION"}
+        </p>
         <img
           class="academic-avatar"
           src="/profile/huang-bin-avatar.jpg"
@@ -81,8 +138,8 @@ const education = t.timeline
         </p>
         <p class="academic-sidebar-bio">
           {lang === "zh"
-            ? "研究多 Agent、RAG、医疗 AI 与生成式 AI 系统，也关注技术如何进入真实业务。"
-            : "Researching multi-agent systems, RAG, medical AI, and how generative AI reaches real products."}
+            ? "最近主要在做 Agent、RAG 和医疗 AI。除了写论文，我也写代码、跑系统，偶尔去和真实客户聊需求。"
+            : "I currently work on Agents, RAG, and medical AI. I write papers, build systems, and occasionally talk to real customers about what they need."}
         </p>
         <div class="academic-facts" aria-label={lang === "zh" ? "代表性成果" : "Selected outcomes"}>
           {briefFacts.map(([value, label]) => (
@@ -113,20 +170,72 @@ const education = t.timeline
           >
             {lang === "zh" ? "EN" : "中文"}
           </a>
+          <button
+            class="academic-audio-toggle"
+            type="button"
+            aria-pressed="false"
+            data-ambient-toggle
+            data-label-off={lang === "zh" ? "背景音乐" : "Music"}
+            data-label-on={lang === "zh" ? "音乐播放中" : "Music on"}
+            title={lang === "zh" ? "播放一段很轻的背景音乐，默认关闭" : "Play quiet background music; off by default"}
+          >
+            <span class="academic-audio-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span data-ambient-label>{lang === "zh" ? "背景音乐" : "Music"}</span>
+          </button>
         </nav>
 
         <section class="academic-section academic-intro">
-          <h2>{lang === "zh" ? "关于我" : "About Me"}</h2>
+          <p class="academic-eyebrow">LLM · AGENT · MEDICAL AI</p>
+          <h2>
+            {lang === "zh"
+              ? "我研究 Agent 和医疗 AI，也负责把方法做成能运行的系统。"
+              : "I work on Agents and medical AI, then carry the method into a working system."}
+          </h2>
           <p class="academic-lead">
             {lang === "zh"
-              ? "我是一名 LLM 与 Agent 研究工程师。把 LLM 研究做成可运行系统，把技术方案推进到真实业务结果。"
-              : "I am an LLM & Agent research engineer. I turn LLM research into working systems and technical ideas into measurable business outcomes."}
+              ? "我目前在郑州大学 NLP 实验室读硕士。手上的工作通常从一个研究问题开始，最后要落到实验、代码和可以复现的结果上。"
+              : "I am an M.Sc. student at the ZZU NLP Lab. My work usually starts with a research question and ends with experiments, code, and a result that can be reproduced."}
           </p>
           <p>
             {lang === "zh"
-              ? "我的工作横跨研究、工程与产品落地：从角色非对称多 Agent、医疗知识图谱，到企业级 Agent 配置与生成式 AI 推理优化。所有页面都区分个人贡献、证据状态与公开边界。"
-              : "My work spans research, engineering, and product delivery—from role-asymmetric multi-agent systems and medical knowledge graphs to enterprise Agent configuration and generative-AI inference optimization. Each page separates personal contribution, evidence status, and public boundaries."}
+              ? "过去几年，我做过角色非对称的胸部 CT 报告生成，搭过包含 33,214 个实体的中医知识图谱，也测试过企业 Agent 配置和生成模型推理加速。还有一段海外产品经历，让我开始认真考虑技术怎么被客户理解、怎么真正卖出去。"
+              : "I have worked on role-asymmetric chest CT report generation, built a TCM knowledge graph with 33,214 entities, and tested enterprise Agent configuration and generative-model inference. An overseas product role also taught me how customers understand technology—and what it takes to sell it."}
           </p>
+          <div class="academic-intro-actions">
+            <a class="academic-primary-link" href={`/${lang}/research/`}>
+              {lang === "zh" ? "查看研究成果" : "Explore research"} <span>↗</span>
+            </a>
+            <a href={`/${lang}/projects/`}>
+              {lang === "zh" ? "查看工程案例" : "View engineering cases"} <span>→</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="academic-section academic-capability-band" aria-labelledby="capability-title">
+          <div class="academic-capability-heading">
+            <p>{lang === "zh" ? "我做过的事情，大致可以分成三类" : "My work falls into three areas"}</p>
+            <h2 id="capability-title">
+              {lang === "zh" ? "研究、工程和产品" : "Research, engineering, and product"}
+            </h2>
+          </div>
+          <div class="academic-capability-grid">
+            {capabilities.map((capability) => (
+              <a class="academic-capability-card" href={capability.href}>
+                <div class="academic-capability-index">
+                  <span>{capability.index}</span>
+                  <small>{capability.label}</small>
+                </div>
+                <h3>{capability.title}</h3>
+                <p>{capability.description}</p>
+                <div class="academic-capability-metrics">
+                  {capability.metrics.map(([value, label]) => (
+                    <span><strong>{value}</strong><small>{label}</small></span>
+                  ))}
+                </div>
+                <b aria-hidden="true">↗</b>
+              </a>
+            ))}
+          </div>
         </section>
 
         <section class="academic-section">
@@ -234,4 +343,90 @@ const education = t.timeline
       </main>
     </div>
   </section>
+  <script is:inline>
+    (() => {
+      const button = document.querySelector("[data-ambient-toggle]");
+      if (!button || button.dataset.bound === "true") return;
+      button.dataset.bound = "true";
+
+      let context;
+      let master;
+      let timer;
+      let active = false;
+      let chordIndex = 0;
+      const chords = [
+        [174.61, 220, 261.63],
+        [196, 246.94, 293.66],
+        [164.81, 220, 329.63],
+        [174.61, 233.08, 293.66]
+      ];
+
+      const updateButton = () => {
+        const label = button.querySelector("[data-ambient-label]");
+        const nextLabel = active ? button.dataset.labelOn : button.dataset.labelOff;
+        button.setAttribute("aria-pressed", String(active));
+        if (label && nextLabel) label.textContent = nextLabel;
+      };
+
+      const playChord = () => {
+        if (!context || !master || !active) return;
+        const now = context.currentTime;
+        const frequencies = chords[chordIndex % chords.length];
+        chordIndex += 1;
+
+        frequencies.forEach((frequency, noteIndex) => {
+          const oscillator = context.createOscillator();
+          const gain = context.createGain();
+          oscillator.type = noteIndex === 1 ? "triangle" : "sine";
+          oscillator.frequency.setValueAtTime(frequency, now);
+          oscillator.detune.setValueAtTime((noteIndex - 1) * 3, now);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.exponentialRampToValueAtTime(noteIndex === 1 ? 0.014 : 0.009, now + 1.1);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 5.8);
+          oscillator.connect(gain);
+          gain.connect(master);
+          oscillator.start(now);
+          oscillator.stop(now + 6);
+        });
+      };
+
+      const start = async () => {
+        if (!window.AudioContext) return;
+        if (!context) {
+          context = new window.AudioContext();
+          master = context.createGain();
+          master.gain.value = 0.5;
+          master.connect(context.destination);
+        }
+        await context.resume();
+        active = true;
+        master.gain.setTargetAtTime(0.5, context.currentTime, 0.18);
+        updateButton();
+        playChord();
+        timer = window.setInterval(playChord, 6500);
+      };
+
+      const stop = () => {
+        if (timer) window.clearInterval(timer);
+        timer = undefined;
+        active = false;
+        updateButton();
+        if (context && master) {
+          master.gain.setTargetAtTime(0.0001, context.currentTime, 0.08);
+          window.setTimeout(() => context?.suspend(), 260);
+        }
+      };
+
+      button.addEventListener("click", () => {
+        if (active) stop();
+        else start();
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (!context || !active) return;
+        if (document.hidden) context.suspend();
+        else context.resume();
+      });
+      window.addEventListener("pagehide", stop);
+    })();
+  </script>
 </BaseLayout>
