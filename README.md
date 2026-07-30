@@ -22,6 +22,7 @@
 - 中英文独立路由：`/zh/`、`/en/`
 - 静态构建 + Sites Worker 入口
 - 无登录、无数据库、无统计脚本
+- 首页视觉结构参考 MIT License 的 [Academic Portfolio Astro](https://github.com/rubzip/academic-portfolio-astro)，内容模型、双语路由和研究/项目页面为本项目定制实现
 
 ## 本地开发
 

@@ -1,11 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import SectionHeading from "@/components/SectionHeading.astro";
-import PublicationCard from "@/components/PublicationCard.astro";
-import ProjectCard from "@/components/ProjectCard.astro";
-import AwardGallery from "@/components/AwardGallery.astro";
-import ContactPanel from "@/components/ContactPanel.astro";
-import { copy, languages, platforms } from "@/lib/i18n";
+import { copy, languages } from "@/lib/i18n";
 import { getLocalizedCollection } from "@/lib/content";
 import type { Lang } from "@/lib/models";
 
@@ -15,9 +10,11 @@ export function getStaticPaths() {
 
 const { lang } = Astro.props as { lang: Lang };
 const t = copy[lang];
+const alternate = lang === "zh" ? "en" : "zh";
+const publicationOrder = ["radad", "finance-agent", "tcm-llm", "firewallm"];
 const publications = (await getLocalizedCollection("publications", lang))
   .filter((entry) => entry.data.featured)
-  .sort((a, b) => b.data.year - a.data.year);
+  .sort((a, b) => publicationOrder.indexOf(a.data.slug) - publicationOrder.indexOf(b.data.slug));
 const projectOrder = [
   "tcm-knowledge-graph",
   "xfusion-agent-profile",
@@ -30,153 +27,181 @@ const projects = (await getLocalizedCollection("projects", lang))
 const writing = (await getLocalizedCollection("writing", lang))
   .filter((entry) => entry.data.featured)
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const awards = (await getLocalizedCollection("awards", lang))
-  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year);
+const statusLabels = lang === "zh"
+  ? {
+      published: "已发表",
+      accepted: "已录用",
+      under_review: "审稿中",
+      manuscript: "研究稿",
+      shared_task: "共享任务"
+    }
+  : {
+      published: "Published",
+      accepted: "Accepted",
+      under_review: "Under Review",
+      manuscript: "Manuscript",
+      shared_task: "Shared Task"
+    };
+const interests = lang === "zh"
+  ? ["多 Agent 协作", "RAG 与知识工程", "医疗 AI", "生成式 AI 系统", "推理优化"]
+  : ["Multi-Agent Systems", "RAG & Knowledge Engineering", "Medical AI", "Generative AI Systems", "Inference Optimization"];
+const briefFacts = lang === "zh"
+  ? [["5+", "第一作者研究"], ["2.35×", "推理加速"], ["33,214", "图谱实体"]]
+  : [["5+", "first-author works"], ["2.35×", "inference speedup"], ["33,214", "KG entities"]];
 ---
 
-<BaseLayout lang={lang} image="/og.png">
-  <section class="home-hero">
-    <div class="shell hero-grid">
-      <div>
-        <div class="eyebrow">{t.hero.eyebrow}</div>
-        <div class="hero-name">
-          <strong>{t.hero.name}</strong>
-          <span>{t.hero.role}</span>
-        </div>
-        <h1>{t.hero.headline}</h1>
-        <p class="hero-body">{t.hero.body}</p>
-        <div class="hero-meta">
-          <span>{t.hero.status}</span>
-          <span>{t.hero.location}</span>
-        </div>
-        <div class="hero-actions">
-          <a class="button primary" href={`/${lang}/research/`}>{t.hero.primary}<span aria-hidden="true">↗</span></a>
-          <a class="button secondary" href={`/${lang}/projects/`}>{t.hero.secondary}<span aria-hidden="true">→</span></a>
-        </div>
-      </div>
-      <div class="hero-visual" aria-label={lang === "zh" ? "黄彬研究方向示意" : "Bin Huang research focus"}>
-        <div class="identity-orbit">
-          <img
-            class="profile-avatar profile-avatar-hero"
-            src="/profile/huang-bin-avatar.jpg"
-            alt={lang === "zh" ? "黄彬个人照片" : "Portrait of Bin Huang"}
-            width="640"
-            height="640"
-            loading="eager"
-            fetchpriority="high"
-          />
-          <span class="orbit-label">MULTI-AGENT</span>
-          <span class="orbit-label">RAG</span>
-          <span class="orbit-label">MEDICAL AI</span>
-          <span class="orbit-label">SYSTEMS</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="metric-band">
-    <div class="shell metric-grid">
-      {t.metrics.map(([value, label]) => <div class="metric-item"><strong>{value}</strong><span>{label}</span></div>)}
-    </div>
-  </section>
-
-  <section class="section section-dark">
-    <div class="shell">
-      <SectionHeading
-        kicker={t.sections.researchKicker}
-        title={t.sections.researchTitle}
-        body={t.sections.researchBody}
-        href={`/${lang}/research/`}
-        linkLabel={t.sections.viewAll}
-      />
-      <div class="publication-grid">
-        {publications.map((entry) => <PublicationCard entry={entry} lang={lang} />)}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="shell">
-      <SectionHeading
-        kicker={t.sections.projectKicker}
-        title={t.sections.projectTitle}
-        body={t.sections.projectBody}
-        href={`/${lang}/projects/`}
-        linkLabel={t.sections.viewAll}
-      />
-      <div class="project-stack">
-        {projects.map((entry, index) => <ProjectCard entry={entry} lang={lang} index={index} />)}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="shell">
-      <SectionHeading kicker={t.sections.timelineKicker} title={t.sections.timelineTitle} />
-      <div class="timeline-grid">
-        {t.timeline.map((item) => (
-          <article class="timeline-item">
-            <time>{item.period}</time>
-            <h3>{item.title}</h3>
-            <strong>{item.meta}</strong>
-            <p>{item.detail}</p>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="shell">
-      <SectionHeading
-        kicker={t.sections.writingKicker}
-        title={t.sections.writingTitle}
-        href={`/${lang}/writing/`}
-        linkLabel={t.sections.viewAll}
-      />
-      <div class="writing-layout">
-        <div class="article-list">
-          {writing.map((entry) => (
-            <article class="article-card">
-              <time datetime={entry.data.publishedAt.toISOString()}>
-                {entry.data.readingMinutes} MIN
-              </time>
-              <div>
-                <h3><a href={`/${lang}/writing/${entry.data.slug}/`}>{entry.data.title}</a></h3>
-                <p>{entry.data.summary}</p>
-                <div class="tag-row">{entry.data.tags.map((tag) => <span>#{tag}</span>)}</div>
-              </div>
-            </article>
+<BaseLayout lang={lang} image="/og.png" minimal>
+  <section class="academic-home">
+    <div class="shell academic-home-grid">
+      <aside class="academic-sidebar">
+        <img
+          class="academic-avatar"
+          src="/profile/huang-bin-avatar.jpg"
+          alt={lang === "zh" ? "黄彬个人照片" : "Portrait of Bin Huang"}
+          width="640"
+          height="640"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <h1>{t.hero.name}</h1>
+        <p class="academic-role">{t.hero.role}</p>
+        <p class="academic-affiliation">
+          {lang === "zh" ? "郑州大学 NLP 实验室 · 硕士在读" : "M.Sc. Student · ZZU NLP Lab"}
+        </p>
+        <p class="academic-sidebar-bio">
+          {lang === "zh"
+            ? "研究多 Agent、RAG、医疗 AI 与生成式 AI 系统，也关注技术如何进入真实业务。"
+            : "Researching multi-agent systems, RAG, medical AI, and how generative AI reaches real products."}
+        </p>
+        <div class="academic-facts" aria-label={lang === "zh" ? "代表性成果" : "Selected outcomes"}>
+          {briefFacts.map(([value, label]) => (
+            <span><strong>{value}</strong>{label}</span>
           ))}
         </div>
-        <div>
-          <div class="platform-list">
-            {platforms[lang].map((platform) => (
-              <article class="platform-card">
-                <div class="platform-label"><span>{platform.name}</span><span>↗</span></div>
-                <h3><a href={platform.url} target="_blank" rel="noreferrer">{platform.handle}</a></h3>
-                <p>{platform.note}</p>
-                <div class="platform-metrics">{platform.metrics.map((metric) => <span>{metric}</span>)}</div>
+        <div class="academic-links">
+          <a href="mailto:1084893712@qq.com">Email</a>
+          <a href="https://github.com/benny108" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.zhihu.com/people/42-29-40-28" target="_blank" rel="noreferrer">知乎</a>
+          <a href="https://space.bilibili.com/3493106871700084" target="_blank" rel="noreferrer">Bilibili</a>
+        </div>
+        <p class="academic-availability"><span></span>{t.hero.status}<br />{t.hero.location}</p>
+      </aside>
+
+      <main class="academic-main">
+        <nav class="academic-nav" aria-label={lang === "zh" ? "主导航" : "Main navigation"}>
+          <a class="active" href={`/${lang}/`}>{t.nav.home}</a>
+          <a href={`/${lang}/research/`}>{t.nav.research}</a>
+          <a href={`/${lang}/projects/`}>{t.nav.projects}</a>
+          <a href={`/${lang}/writing/`}>{t.nav.writing}</a>
+          <a href={`/${lang}/about/`}>{t.nav.about}</a>
+          <a
+            class="academic-lang"
+            href={`/${alternate}/`}
+            data-lang-switch
+            data-target-lang={alternate}
+          >
+            {lang === "zh" ? "EN" : "中文"}
+          </a>
+        </nav>
+
+        <section class="academic-section academic-intro">
+          <h2>{lang === "zh" ? "关于我" : "About Me"}</h2>
+          <p class="academic-lead">
+            {lang === "zh"
+              ? "我是一名 LLM 与 Agent 研究工程师。把 LLM 研究做成可运行系统，把技术方案推进到真实业务结果。"
+              : "I am an LLM & Agent research engineer. I turn LLM research into working systems and technical ideas into measurable business outcomes."}
+          </p>
+          <p>
+            {lang === "zh"
+              ? "我的工作横跨研究、工程与产品落地：从角色非对称多 Agent、医疗知识图谱，到企业级 Agent 配置与生成式 AI 推理优化。所有页面都区分个人贡献、证据状态与公开边界。"
+              : "My work spans research, engineering, and product delivery—from role-asymmetric multi-agent systems and medical knowledge graphs to enterprise Agent configuration and generative-AI inference optimization. Each page separates personal contribution, evidence status, and public boundaries."}
+          </p>
+        </section>
+
+        <section class="academic-section">
+          <h2 class="academic-section-title">{lang === "zh" ? "研究兴趣" : "Research Interests"}</h2>
+          <div class="academic-interest-list">
+            {interests.map((interest) => <span>{interest}</span>)}
+          </div>
+        </section>
+
+        <section class="academic-section">
+          <div class="academic-section-head">
+            <h2 class="academic-section-title">{lang === "zh" ? "精选研究" : "Selected Research"}</h2>
+            <a href={`/${lang}/research/`}>{lang === "zh" ? "全部研究" : "View all"} →</a>
+          </div>
+          <div class="academic-list">
+            {publications.slice(0, 4).map((entry) => (
+              <article class="academic-list-item">
+                <div>
+                  <h3><a href={`/${lang}/research/${entry.data.slug}/`}>{entry.data.title}</a></h3>
+                  <p>{entry.data.summary}</p>
+                </div>
+                <div class="academic-list-meta">
+                  <span>{entry.data.year}</span>
+                  <span>{entry.data.role}</span>
+                  <span>{statusLabels[entry.data.status]}</span>
+                  {entry.data.metrics[0] && <strong>{entry.data.metrics[0]}</strong>}
+                </div>
               </article>
             ))}
           </div>
-          <p class="data-note">{t.dataNote}</p>
-        </div>
-      </div>
+        </section>
+
+        <section class="academic-section academic-split">
+          <div>
+            <div class="academic-section-head">
+              <h2 class="academic-section-title">{lang === "zh" ? "工程与产品" : "Engineering & Product"}</h2>
+              <a href={`/${lang}/projects/`}>{lang === "zh" ? "全部项目" : "View all"} →</a>
+            </div>
+            <div class="academic-compact-list">
+              {projects.slice(0, 3).map((entry) => (
+                <a href={`/${lang}/projects/${entry.data.slug}/`}>
+                  <span>{entry.data.title}</span>
+                  <small>{entry.data.metrics[0]}</small>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div class="academic-section-head">
+              <h2 class="academic-section-title">{lang === "zh" ? "近期写作" : "Recent Writing"}</h2>
+              <a href={`/${lang}/writing/`}>{lang === "zh" ? "全部文章" : "View all"} →</a>
+            </div>
+            <div class="academic-compact-list">
+              {writing.slice(0, 2).map((entry) => (
+                <a href={`/${lang}/writing/${entry.data.slug}/`}>
+                  <span>{entry.data.title}</span>
+                  <small>{entry.data.readingMinutes} MIN</small>
+                </a>
+              ))}
+              <a href={`/${lang}/about/`}>
+                <span>{lang === "zh" ? "教育、经历、荣誉与专利" : "Education, experience, awards & patents"}</span>
+                <small>ABOUT</small>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="academic-note">
+          <p>
+            {lang === "zh"
+              ? "开放 LLM / Agent 实习、研究合作与技术交流。"
+              : "Open to LLM / Agent internships, research collaboration, and technical exchange."}
+          </p>
+          <a href="mailto:1084893712@qq.com">{lang === "zh" ? "联系我" : "Contact me"} →</a>
+        </section>
+
+        <footer class="academic-footer">
+          <span>© {new Date().getFullYear()} {lang === "zh" ? "黄彬" : "Bin Huang"}</span>
+          <span>
+            {lang === "zh" ? "视觉参考" : "Inspired by"}{" "}
+            <a href="https://github.com/rubzip/academic-portfolio-astro" target="_blank" rel="noreferrer">
+              Academic Portfolio Astro
+            </a>
+          </span>
+        </footer>
+      </main>
     </div>
   </section>
-
-  <section class="section">
-    <div class="shell">
-      <SectionHeading
-        kicker={t.sections.awardsKicker}
-        title={t.sections.awardsTitle}
-        href={`/${lang}/about/#recognition`}
-        linkLabel={t.sections.viewAll}
-      />
-      <AwardGallery entries={awards.slice(0, 6)} lang={lang} />
-    </div>
-  </section>
-
-  <ContactPanel lang={lang} />
 </BaseLayout>

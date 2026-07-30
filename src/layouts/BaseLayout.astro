@@ -11,6 +11,7 @@ interface Props {
   description?: string;
   image?: string;
   article?: boolean;
+  minimal?: boolean;
 }
 
 const {
@@ -18,7 +19,8 @@ const {
   title = copy[lang].meta.title,
   description = copy[lang].meta.description,
   image,
-  article = false
+  article = false,
+  minimal = false
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -73,13 +75,13 @@ const structuredData = {
     <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <title>{title}</title>
   </head>
-  <body>
+  <body class:list={{ "minimal-site": minimal }}>
     <a class="skip-link" href="#main-content">{lang === "zh" ? "跳到正文" : "Skip to content"}</a>
-    <Header lang={lang} />
+    {!minimal && <Header lang={lang} />}
     <main id="main-content">
       <slot />
     </main>
-    <Footer lang={lang} />
+    {!minimal && <Footer lang={lang} />}
     <script is:inline>
       const menuButton = document.querySelector("[data-menu-toggle]");
       const menu = document.querySelector("[data-mobile-menu]");
