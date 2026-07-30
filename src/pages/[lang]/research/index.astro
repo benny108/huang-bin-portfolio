@@ -1,0 +1,68 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PublicationCard from "@/components/PublicationCard.astro";
+import ContactPanel from "@/components/ContactPanel.astro";
+import { copy, languages } from "@/lib/i18n";
+import { getLocalizedCollection } from "@/lib/content";
+import type { Lang } from "@/lib/models";
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+
+const { lang } = Astro.props as { lang: Lang };
+const t = copy[lang];
+const publications = (await getLocalizedCollection("publications", lang))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year);
+const filters = [
+  ["all", lang === "zh" ? "全部成果" : "All"],
+  ["published", lang === "zh" ? "已发表" : "Published"],
+  ["under_review", lang === "zh" ? "审稿中" : "Under Review"],
+  ["shared_task", lang === "zh" ? "共享任务" : "Shared Tasks"],
+  ["manuscript", lang === "zh" ? "研究稿件" : "Manuscripts"]
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "zh" ? "研究成果｜黄彬" : "Research | Bin Huang"}
+  description={t.sections.researchBody}
+  image="/og.png"
+>
+  <header class="page-hero">
+    <div class="shell">
+      <div class="kicker">{t.sections.researchKicker}</div>
+      <h1>{lang === "zh" ? "让方法、证据与个人贡献站在一起" : "Methods, evidence, and personal contribution—together"}</h1>
+      <p>{t.sections.researchBody}</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="shell">
+      <div class="filter-bar" role="group" aria-label={lang === "zh" ? "筛选论文状态" : "Filter publication status"}>
+        {filters.map(([value, label], index) => (
+          <button type="button" data-filter={value} aria-pressed={index === 0 ? "true" : "false"}>{label}</button>
+        ))}
+      </div>
+      <div class="publication-grid research-list">
+        {publications.map((entry) => <PublicationCard entry={entry} lang={lang} compact />)}
+      </div>
+    </div>
+  </section>
+
+  <ContactPanel lang={lang} />
+
+  <script>
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+    const cards = document.querySelectorAll<HTMLElement>(".research-list [data-status]");
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter || "all";
+        filterButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+        cards.forEach((card) => {
+          card.hidden = filter !== "all" && card.dataset.status !== filter;
+        });
+      });
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,39 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import ContactPanel from "@/components/ContactPanel.astro";
+import { copy, languages } from "@/lib/i18n";
+import { getLocalizedCollection } from "@/lib/content";
+import type { Lang } from "@/lib/models";
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+
+const { lang } = Astro.props as { lang: Lang };
+const t = copy[lang];
+const order = ["tcm-knowledge-graph", "xfusion-agent-profile", "inference-production-gate", "nebula-overseas-gtm"];
+const projects = (await getLocalizedCollection("projects", lang))
+  .sort((a, b) => order.indexOf(a.data.slug) - order.indexOf(b.data.slug));
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "zh" ? "工程与业务案例｜黄彬" : "Engineering & Business Cases | Bin Huang"}
+  description={t.sections.projectBody}
+  image="/og.png"
+>
+  <header class="page-hero">
+    <div class="shell">
+      <div class="kicker">{t.sections.projectKicker}</div>
+      <h1>{lang === "zh" ? "不止证明“做过”，还要说明为什么有效" : "Not just what I built—but why it worked"}</h1>
+      <p>{t.sections.projectBody}</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="shell project-stack">
+      {projects.map((entry, index) => <ProjectCard entry={entry} lang={lang} index={index} />)}
+    </div>
+  </section>
+  <ContactPanel lang={lang} />
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactPanel from "@/components/ContactPanel.astro";
+import type { Lang } from "@/lib/models";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("writing");
+  return entries.map((entry) => ({
+    params: { lang: entry.data.lang, slug: entry.data.slug },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"writing"> };
+const lang = entry.data.lang as Lang;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<BaseLayout lang={lang} title={`${d.title}｜${lang === "zh" ? "黄彬" : "Bin Huang"}`} description={d.summary} article image="/og.png">
+  <header class="detail-lede">
+    <div class="shell">
+      <div class="kicker">{d.publishedAt.toISOString().slice(0, 10)} · {d.readingMinutes} MIN</div>
+      <h1>{d.title}</h1>
+      <p>{d.summary}</p>
+      <div class="detail-metrics">{d.tags.map((tag) => <span>#{tag}</span>)}</div>
+    </div>
+  </header>
+  <section class="content-page">
+    <div class="shell article-shell">
+      <article class="prose"><Content /></article>
+      <aside class="article-meta">
+        <dl>
+          <dt>{lang === "zh" ? "作者" : "Author"}</dt><dd>{lang === "zh" ? "黄彬" : "Bin Huang"}</dd>
+          <dt>{lang === "zh" ? "发布时间" : "Published"}</dt><dd>{d.publishedAt.toISOString().slice(0, 10)}</dd>
+          <dt>{lang === "zh" ? "阅读时间" : "Reading time"}</dt><dd>{d.readingMinutes} min</dd>
+          <dt>{lang === "zh" ? "主题" : "Topics"}</dt><dd>{d.tags.join(" · ")}</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+  <ContactPanel lang={lang} />
+</BaseLayout>

@@ -1,0 +1,115 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import AwardGallery from "@/components/AwardGallery.astro";
+import ContactPanel from "@/components/ContactPanel.astro";
+import { copy, languages } from "@/lib/i18n";
+import { getLocalizedCollection } from "@/lib/content";
+import type { Lang } from "@/lib/models";
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+
+const { lang } = Astro.props as { lang: Lang };
+const t = copy[lang];
+const awards = (await getLocalizedCollection("awards", lang))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.year - a.data.year);
+const skills = [
+  "Multi-Agent Systems",
+  "RAG",
+  "Prompt Engineering",
+  "Medical AI",
+  "Knowledge Graph",
+  "Neo4j",
+  "FAISS",
+  "BiomedCLIP",
+  "Python",
+  "LLM API Integration",
+  "Inference Benchmarking",
+  "AI Product Delivery"
+];
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "zh" ? "关于黄彬" : "About Bin Huang"}
+  description={lang === "zh" ? "黄彬的教育、经历、荣誉与技术能力。" : "Education, experience, recognition, and technical capabilities of Bin Huang."}
+  image="/og.png"
+>
+  <header class="page-hero">
+    <div class="shell">
+      <div class="kicker">ABOUT · TRAJECTORY · EVIDENCE</div>
+      <h1>{lang === "zh" ? "用研究深度建立可信度，用工程和业务结果扩大影响" : "Research depth for credibility; engineering and business outcomes for impact"}</h1>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="shell about-grid">
+      <aside class="about-profile">
+        <span class="hb-avatar">HB</span>
+        <h2>{lang === "zh" ? "黄彬" : "Bin Huang"}</h2>
+        <p>LLM & Agent Research Engineer</p>
+        <div class="profile-facts">
+          <span>{lang === "zh" ? "郑州大学 NLP 实验室 · 硕士在读" : "M.Sc. student · ZZU NLP Lab"}</span>
+          <span>{lang === "zh" ? "郑州 · 广州 · 远程" : "Zhengzhou · Guangzhou · Remote"}</span>
+          <span>{lang === "zh" ? "开放实习与研究合作" : "Open to internships & research collaboration"}</span>
+        </div>
+      </aside>
+      <div class="about-copy">
+        <h2>{lang === "zh" ? "我关注的不只是模型能力，而是能力如何变成结果。" : "I focus not only on model capability, but on how it becomes an outcome."}</h2>
+        <p>
+          {lang === "zh"
+            ? "我的经历横跨医疗 AI、多 Agent、知识图谱、企业 Agent 配置、生成式 AI 推理优化与海外产品落地。共同的方法是：先明确真实约束，再建立可测量的系统，最后诚实呈现结果与边界。"
+            : "My work spans medical AI, multi-agent systems, knowledge graphs, enterprise Agent configuration, generative-AI inference optimization, and overseas product delivery. The common method is to identify real constraints, build a measurable system, and report both outcomes and boundaries honestly."}
+        </p>
+        <div class="skill-cloud">{skills.map((skill) => <span>{skill}</span>)}</div>
+
+        <SectionHeading kicker={t.sections.timelineKicker} title={t.sections.timelineTitle} />
+        <div class="timeline-grid">
+          {t.timeline.map((item) => (
+            <article class="timeline-item">
+              <time>{item.period}</time>
+              <h3>{item.title}</h3>
+              <strong>{item.meta}</strong>
+              <p>{item.detail}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="recognition">
+    <div class="shell">
+      <SectionHeading kicker={t.sections.awardsKicker} title={t.sections.awardsTitle} />
+      <AwardGallery entries={awards} lang={lang} />
+    </div>
+  </section>
+
+  <section class="section section-dark">
+    <div class="shell">
+      <SectionHeading
+        kicker={lang === "zh" ? "PATENTS & EARLIER WORK" : "PATENTS & EARLIER WORK"}
+        title={lang === "zh" ? "专利与早期研究" : "Patents and earlier research"}
+        body={lang === "zh" ? "严格区分申请、授权与公开数据库当前状态。" : "Application, grant, and current public-database status are stated separately."}
+      />
+      <div class="publication-grid">
+        <article class="publication-card">
+          <div class="card-topline"><span class="status status-under_review">{lang === "zh" ? "发明专利申请" : "Patent Application"}</span><span>2024</span></div>
+          <h3>{lang === "zh" ? "基于大型语言模型服务的个人数据隐私保护与恢复方法" : "Personal Data Privacy Protection and Recovery for LLM Services"}</h3>
+          <p>{lang === "zh" ? "申请号 202410355339.7；第一发明人。当前仅公开为申请，不表述为已授权。" : "Application 202410355339.7; first inventor. Publicly described as an application, not a granted patent."}</p>
+          <div class="role-row"><strong>{lang === "zh" ? "第一发明人" : "First Inventor"}</strong><span>Patent Application</span></div>
+        </article>
+        <article class="publication-card">
+          <div class="card-topline"><span class="status status-published">{lang === "zh" ? "已授权" : "Granted"}</span><span>2024</span></div>
+          <h3><a href="https://patents.google.com/patent/CN118112576A/zh" target="_blank" rel="noreferrer">{lang === "zh" ? "基于声呐定位和智能算法的海底设备搜寻方法" : "Sonar Localization and Intelligent Search for Underwater Equipment"}</a></h3>
+          <p>{lang === "zh" ? "专利 CN118112576B；第四发明人。详情页链接公开专利数据库，当前法律状态以数据库为准。" : "Patent CN118112576B; fourth inventor. Current legal status should be verified in the linked public database."}</p>
+          <div class="role-row"><strong>{lang === "zh" ? "第四发明人" : "Fourth Inventor"}</strong><span>CN118112576B</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <ContactPanel lang={lang} />
+</BaseLayout>

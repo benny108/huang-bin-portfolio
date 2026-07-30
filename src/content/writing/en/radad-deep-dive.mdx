@@ -1,0 +1,30 @@
+---
+lang: "en"
+slug: "radad-deep-dive"
+title: "Why Medical Report Generation Needs Role-Asymmetric Agents"
+summary: "The goal is not to ask two agents the same question. It is to assign different clinical risks: one prioritizes recall, while the other controls false positives."
+publishedAt: "2026-07-30"
+tags: ["Multi-Agent", "Medical AI", "RAG"]
+featured: true
+readingMinutes: 8
+---
+
+A single LLM response often collapses two conflicting objectives: finding as many abnormalities as possible while avoiding unsupported diagnoses. In chest CT reporting, this is not merely a writing-quality issue; it is a clinical trade-off between recall and precision.
+
+## Why symmetric debate is insufficient
+
+When two agents share the same prompt, objective, and evidence, their outputs become highly correlated. The conversation looks like debate but behaves like repeated sampling. RADAD creates an explicit role difference: a recall-oriented agent searches for missed findings, while a conservative agent challenges weak evidence and over-interpretation.
+
+## Shared evidence anchors
+
+The system encodes CT images with BiomedCLIP and retrieves visually similar cases from a FAISS index. Both agents see the same cases but interpret them under different risk preferences. The discussion is therefore grounded in inspectable evidence rather than linguistic intuition.
+
+## Bounded interaction
+
+RADAD uses only three image calls and four text-only interaction steps. The limit focuses the protocol on finding, challenging, and revising claims—and makes inference cost measurable.
+
+## Interpreting the outcome
+
+BLEU-4 improved from 0.122 to 0.260, while Macro-F1 increased from 0.368 to 0.437. The transferable insight is broader than the metrics: identify conflicting objectives first, then design distinct roles, shared evidence, and explicit stopping conditions.
+
+> This article explains only the public method and sanitized results. The manuscript under review is not distributed.

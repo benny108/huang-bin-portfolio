@@ -1,0 +1,27 @@
+---
+lang: "en"
+slug: "tcm-knowledge-graph"
+title: "End-to-End TCM Knowledge Graph System"
+summary: "Transforms knowledge from five TCM textbooks into a queryable, validated, and continuously improvable graph."
+period: "2024—2025"
+role: "Research & Engineering Lead"
+featured: true
+tags: ["Knowledge Graph", "RAG", "Neo4j"]
+metrics: ["33,214 entities", "37,766 relations", "3,420+ herbal-tea relations"]
+confidentiality: "Only sanitized architecture, scale, and methods are public; source textbook data remains private."
+accent: "violet"
+---
+
+## Constraint
+
+Knowledge in TCM textbooks is distributed across unstructured text. One-pass LLM extraction creates entity drift, relation conflicts, and errors that are difficult to audit.
+
+## My actions
+
+- Built a pipeline combining embedding retrieval, a few-shot example bank, and LLM extraction.
+- Designed automatic scoring: low-confidence results are re-extracted, while high-confidence results enter the graph and improve the example bank.
+- Implemented normalized JSON/Excel ingestion, entity resolution, conflict detection, and relation reliability checks.
+
+## Outcome
+
+The final graph contains 33,214 entities and 37,766 relations across diseases, syndrome patterns, formulas, and medicines, creating a reusable foundation for RAG and TCM LLM evaluation.

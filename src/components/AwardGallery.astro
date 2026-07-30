@@ -1,0 +1,43 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { copy } from "@/lib/i18n";
+import type { Lang } from "@/lib/models";
+import AwardCard from "@/components/AwardCard.astro";
+
+interface Props {
+  entries: CollectionEntry<"awards">[];
+  lang: Lang;
+  expandable?: boolean;
+}
+
+const { entries, lang, expandable = false } = Astro.props;
+const t = copy[lang];
+const visible = expandable ? entries.filter((entry) => entry.data.featured) : entries;
+const hidden = expandable ? entries.filter((entry) => !entry.data.featured) : [];
+---
+
+<div class="award-grid">
+  {visible.map((entry) => <AwardCard entry={entry} lang={lang} />)}
+</div>
+
+{
+  hidden.length > 0 && (
+    <details class="award-details">
+      <summary>{t.sections.allAwards}</summary>
+      <div class="award-grid">
+        {hidden.map((entry) => <AwardCard entry={entry} lang={lang} />)}
+      </div>
+    </details>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-dialog-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.dialogOpen;
+      if (!id) return;
+      const dialog = document.getElementById(id);
+      if (dialog instanceof HTMLDialogElement) dialog.showModal();
+    });
+  });
+</script>

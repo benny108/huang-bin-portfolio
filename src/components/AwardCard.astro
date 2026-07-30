@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { copy } from "@/lib/i18n";
+import type { Lang } from "@/lib/models";
+
+interface Props {
+  entry: CollectionEntry<"awards">;
+  lang: Lang;
+}
+
+const { entry, lang } = Astro.props;
+const d = entry.data;
+const dialogId = `award-${lang}-${d.slug}`;
+const t = copy[lang];
+---
+
+<article class="award-card">
+  {
+    d.image ? (
+      <button class="award-preview" type="button" data-dialog-open={dialogId} aria-label={`${d.title} · ${t.sections.close}`}>
+        <img src={d.image} alt={d.imageAlt || d.title} loading="lazy" />
+      </button>
+    ) : (
+      <div class="award-preview" aria-hidden="true">
+        <span class="award-placeholder">{d.year}</span>
+      </div>
+    )
+  }
+  <div class="award-copy">
+    <small>{d.year} · {d.level}</small>
+    <h3>{d.title}</h3>
+    <p>{d.summary}</p>
+  </div>
+  {
+    d.image && (
+      <dialog class="award-dialog" id={dialogId}>
+        <img src={d.image} alt={d.imageAlt || d.title} />
+        <form method="dialog"><button>{t.sections.close}</button></form>
+      </dialog>
+    )
+  }
+</article>

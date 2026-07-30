@@ -1,0 +1,56 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactPanel from "@/components/ContactPanel.astro";
+import { copy } from "@/lib/i18n";
+import { statusLabels } from "@/lib/content";
+import type { Lang } from "@/lib/models";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("publications");
+  return entries.map((entry) => ({
+    params: { lang: entry.data.lang, slug: entry.data.slug },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"publications"> };
+const lang = entry.data.lang as Lang;
+const t = copy[lang];
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<BaseLayout lang={lang} title={`${d.title}｜${lang === "zh" ? "黄彬" : "Bin Huang"}`} description={d.summary} article image="/og.png">
+  <header class="detail-lede">
+    <div class="shell">
+      <div class="kicker">{statusLabels[lang][d.status]} · {d.year} · {d.role}</div>
+      <h1>{d.title}</h1>
+      <p>{d.summary}</p>
+      <div class="detail-metrics">{d.metrics.map((metric) => <span>{metric}</span>)}</div>
+    </div>
+  </header>
+  <section class="content-page">
+    <div class="shell article-shell">
+      <article class="prose">
+        <Content />
+        <h2>{t.sections.contribution}</h2>
+        <ul>{d.contributions.map((item) => <li>{item}</li>)}</ul>
+      </article>
+      <aside class="article-meta">
+        <dl>
+          <dt>{lang === "zh" ? "状态" : "Status"}</dt>
+          <dd>{statusLabels[lang][d.status]}</dd>
+          <dt>{lang === "zh" ? "角色" : "Role"}</dt>
+          <dd>{d.role}</dd>
+          <dt>{lang === "zh" ? "平台 / 会议信息" : "Venue"}</dt>
+          <dd>{d.venue}</dd>
+          <dt>{lang === "zh" ? "方向" : "Topics"}</dt>
+          <dd>{d.tags.join(" · ")}</dd>
+        </dl>
+        {d.officialUrl && <a class="button primary" href={d.officialUrl} target="_blank" rel="noreferrer">{lang === "zh" ? "查看官方页面" : "Official page"} ↗</a>}
+      </aside>
+    </div>
+  </section>
+  <ContactPanel lang={lang} />
+</BaseLayout>

@@ -1,0 +1,123 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+import { copy } from "@/lib/i18n";
+import type { Lang } from "@/lib/models";
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+}
+
+const {
+  lang,
+  title = copy[lang].meta.title,
+  description = copy[lang].meta.description,
+  image,
+  article = false
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const alternateLang = lang === "zh" ? "en" : "zh";
+const alternatePath = Astro.url.pathname.replace(/^\/(zh|en)(?=\/|$)/, `/${alternateLang}`);
+const alternateUrl = new URL(alternatePath, Astro.site);
+const ogImage = image ? new URL(image, Astro.site) : undefined;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: lang === "zh" ? "黄彬" : "Bin Huang",
+  alternateName: lang === "zh" ? "Bin Huang" : "黄彬",
+  jobTitle: "LLM & Agent Research Engineer",
+  email: "mailto:1084893712@qq.com",
+  affiliation: {
+    "@type": "CollegeOrUniversity",
+    name: "Zhengzhou University"
+  },
+  sameAs: [
+    "https://github.com/benny108",
+    "https://www.zhihu.com/people/42-29-40-28",
+    "https://space.bilibili.com/3493106871700084"
+  ],
+  url: canonical.origin
+};
+---
+
+<!doctype html>
+<html lang={lang === "zh" ? "zh-CN" : "en"}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#f4f5f2" />
+    <meta name="description" content={description} />
+    <meta name="author" content="Bin Huang" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={alternateLang === "zh" ? "zh-CN" : "en"} href={alternateUrl} />
+    <link rel="alternate" hreflang={lang === "zh" ? "zh-CN" : "en"} href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={new URL("/zh/", Astro.site)} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="alternate" type="application/rss+xml" title={`${title} RSS`} href={`/${lang}/rss.xml`} />
+    <meta property="og:type" content={article ? "article" : "website"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === "zh" ? "zh_CN" : "en_US"} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{lang === "zh" ? "跳到正文" : "Skip to content"}</a>
+    <Header lang={lang} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <script is:inline>
+      const menuButton = document.querySelector("[data-menu-toggle]");
+      const menu = document.querySelector("[data-mobile-menu]");
+      menuButton?.addEventListener("click", () => {
+        const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", String(!isOpen));
+        menu?.toggleAttribute("data-open", !isOpen);
+      });
+
+      document.querySelectorAll("[data-lang-switch]").forEach((link) => {
+        link.addEventListener("click", () => {
+          const target = link.getAttribute("data-target-lang");
+          if (target) localStorage.setItem("hb-locale", target);
+        });
+      });
+
+      document.querySelectorAll("[data-copy-wechat]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText("bennyjob");
+          } catch {
+            const input = document.createElement("input");
+            input.value = "bennyjob";
+            document.body.append(input);
+            input.select();
+            document.execCommand("copy");
+            input.remove();
+          }
+          const normal = button.getAttribute("data-normal-label") || "Copy";
+          const copied = button.getAttribute("data-copied-label") || "Copied";
+          button.textContent = copied;
+          button.setAttribute("data-copied", "true");
+          setTimeout(() => {
+            button.textContent = normal;
+            button.removeAttribute("data-copied");
+          }, 1800);
+        });
+      });
+    </script>
+  </body>
+</html>

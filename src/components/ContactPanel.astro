@@ -1,0 +1,38 @@
+---
+import { copy } from "@/lib/i18n";
+import type { Lang } from "@/lib/models";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<section class="contact-panel shell">
+  <div>
+    <div class="kicker">{t.sections.contactKicker}</div>
+    <h2>{t.sections.contactTitle}</h2>
+    <p>{t.sections.contactBody}</p>
+  </div>
+  <div class="contact-actions">
+    <a class="contact-link primary" href="mailto:1084893712@qq.com">
+      <span>{t.contact.email}</span>
+      <strong>1084893712@qq.com</strong>
+    </a>
+    <a class="contact-link" href="https://github.com/benny108" target="_blank" rel="noreferrer">
+      <span>{t.contact.github}</span>
+      <strong>github.com/benny108 ↗</strong>
+    </a>
+    <button
+      class="contact-link"
+      type="button"
+      data-copy-wechat
+      data-normal-label={`${t.contact.copy} · bennyjob`}
+      data-copied-label={t.contact.copied}
+    >
+      {t.contact.copy} · bennyjob
+    </button>
+  </div>
+</section>

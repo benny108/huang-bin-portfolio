@@ -1,0 +1,29 @@
+---
+lang: "en"
+slug: "inference-production-gate"
+title: "From Benchmark to Production Gate: Generative AI Inference Optimization"
+summary: "Evaluates speed, memory, visual quality, subtitles, and long-duration stability in one production-readiness framework."
+period: "2026"
+role: "Independent Technical Research"
+featured: true
+tags: ["Inference", "Quantization", "Benchmark"]
+metrics: ["~2.35× image-stage speedup", "~19.2 GB resident VRAM", "19.541 s average warm video run"]
+confidentiality: "Only sanitized benchmark results are public; internal paths, IPs, business LoRAs, and filenames are excluded."
+accent: "amber"
+---
+
+## Problem
+
+A fast single run is not production readiness. Image and video generation must also meet constraints on memory, quality, text stability, audio-video consistency, and long-duration reliability.
+
+## Image benchmark
+
+Under the same Qwen-Image, 1024×576, and 8-step setup, I compared two quantized inference paths. Generation time decreased from 2.284 s to 0.972 s—about 2.35×—while resident memory, peak memory, and quality trade-offs were reported together.
+
+## Video benchmark
+
+I evaluated an 8-step LTX-2.3 22B distilled GGUF Q4 text-to-audio-video pipeline. Short warm runs averaged 19.541 s, but subtitle artifacts, long dialogue, and black-frame failures did not pass a strict production gate.
+
+## Conclusion
+
+The outcome is framed as a performance–quality boundary study rather than a completed production delivery. The gate makes optimization claims reproducible, challengeable, and actionable.

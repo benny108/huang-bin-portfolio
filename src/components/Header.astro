@@ -1,0 +1,80 @@
+---
+import { copy } from "@/lib/i18n";
+import type { Lang } from "@/lib/models";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = copy[lang];
+const alternate = lang === "zh" ? "en" : "zh";
+const alternatePath = Astro.url.pathname.replace(/^\/(zh|en)(?=\/|$)/, `/${alternate}`);
+const navItems = [
+  ["home", `/${lang}/`],
+  ["research", `/${lang}/research/`],
+  ["projects", `/${lang}/projects/`],
+  ["writing", `/${lang}/writing/`],
+  ["about", `/${lang}/about/`]
+] as const;
+
+function active(path: string) {
+  if (path === `/${lang}/`) return Astro.url.pathname === path;
+  return Astro.url.pathname.startsWith(path);
+}
+---
+
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href={`/${lang}/`} aria-label={lang === "zh" ? "黄彬首页" : "Bin Huang home"}>
+      <span class="brand-mark">HB</span>
+      <span class="brand-copy">
+        <strong>{lang === "zh" ? "黄彬" : "Bin Huang"}</strong>
+        <small>LLM · AGENT · RESEARCH</small>
+      </span>
+    </a>
+    <nav class="desktop-nav" aria-label={lang === "zh" ? "主导航" : "Main navigation"}>
+      {
+        navItems.map(([key, href]) => (
+          <a href={href} aria-current={active(href) ? "page" : undefined}>
+            {t.nav[key]}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="header-actions">
+      <a
+        class="language-switch"
+        href={alternatePath}
+        data-lang-switch
+        data-target-lang={alternate}
+        aria-label={lang === "zh" ? "Switch to English" : "切换到中文"}
+      >
+        <span class={lang === "zh" ? "active" : ""}>中</span>
+        <i>/</i>
+        <span class={lang === "en" ? "active" : ""}>EN</span>
+      </a>
+      <button
+        class="menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={lang === "zh" ? "打开导航" : "Open navigation"}
+      >
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-menu" class="mobile-nav" data-mobile-menu aria-label={lang === "zh" ? "移动导航" : "Mobile navigation"}>
+    <div class="shell">
+      {
+        navItems.map(([key, href]) => (
+          <a href={href} aria-current={active(href) ? "page" : undefined}>
+            {t.nav[key]}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+</header>

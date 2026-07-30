@@ -1,0 +1,34 @@
+---
+lang: "en"
+slug: "benchmark-to-production-gate"
+title: "From Benchmark to Production Gate: Why “Faster” Is Not Yet Deployable"
+summary: "A compelling speedup is not enough. Production readiness must cover latency, memory, quality, and stability together."
+publishedAt: "2026-07-29"
+tags: ["Inference", "Benchmark", "Production"]
+featured: true
+readingMinutes: 10
+---
+
+A common inference-optimization mistake is treating a single timing screenshot as a conclusion. Change the model, resolution, steps, negative prompt, warm-up state, or memory policy, and the comparison may no longer be valid.
+
+## Lock the comparison conditions
+
+The image benchmark used the same Qwen-Image model, 1024×576 resolution, and eight sampling steps. Both quantized paths were timed at the same generation stage. Time decreased from 2.284 s to 0.972 s—about 2.35×.
+
+Faster did not mean better on every dimension. Resident VRAM dropped to roughly 19.2 GB, but generation peak memory could be higher. A useful conclusion must report resident memory, peak memory, and quality together.
+
+## Video generation needs a stricter gate
+
+The LTX-2.3 22B distilled GGUF Q4 pipeline averaged 19.541 s in short warm-run tests. The speed was promising, yet subtitle artifacts, long-dialogue degradation, and black frames remained. Under a strict production definition, none of these samples passed every quality gate.
+
+This is not an uninformative failure. It defines the system boundary: short generation is worth optimizing further, while long content and text stability cannot yet be promised.
+
+## A reusable production gate
+
+1. **Performance:** cold start, warm start, mean latency, and tail latency.
+2. **Resources:** resident memory, peak memory, and concurrency headroom.
+3. **Quality:** subject consistency, detail, text, and audio-video synchronization.
+4. **Reliability:** repeat success rate, long jobs, and failure recovery.
+5. **Business constraints:** cost, explainable fallback, and human review.
+
+The value of optimization is not only a smaller number. It is giving the team a credible answer to what can be promised now, what cannot, and what should be solved next.

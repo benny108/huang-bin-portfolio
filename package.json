@@ -1,0 +1,28 @@
+{
+  "name": "huang-bin-portfolio",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build && node scripts/postbuild.mjs",
+    "typecheck": "astro check",
+    "validate:content": "node scripts/validate-content.mjs",
+    "test": "pnpm validate:content && pnpm build && node --test tests/site.test.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "7.0.5",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.3",
+    "astro": "7.1.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "5.9.3"
+  }
+}

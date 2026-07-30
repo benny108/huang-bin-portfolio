@@ -1,0 +1,29 @@
+---
+import "@/styles/global.css";
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>Bin Huang · 黄彬</title>
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem("hb-locale");
+        const lang = saved === "en" || saved === "zh"
+          ? saved
+          : navigator.language.toLowerCase().startsWith("en") ? "en" : "zh";
+        location.replace(`/${lang}/`);
+      })();
+    </script>
+  </head>
+  <body class="root-router">
+    <main>
+      <div class="hb-avatar">HB</div>
+      <p>正在进入 / Redirecting…</p>
+      <p><a href="/zh/">中文</a> · <a href="/en/">English</a></p>
+    </main>
+  </body>
+</html>

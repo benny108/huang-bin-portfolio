@@ -1,0 +1,63 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactPanel from "@/components/ContactPanel.astro";
+import { copy, languages, platforms } from "@/lib/i18n";
+import { getLocalizedCollection } from "@/lib/content";
+import type { Lang } from "@/lib/models";
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+
+const { lang } = Astro.props as { lang: Lang };
+const t = copy[lang];
+const writing = (await getLocalizedCollection("writing", lang))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+
+<BaseLayout
+  lang={lang}
+  title={lang === "zh" ? "写作与公开传播｜黄彬" : "Writing & Outreach | Bin Huang"}
+  description={t.sections.writingTitle}
+  image="/og.png"
+>
+  <header class="page-hero">
+    <div class="shell">
+      <div class="kicker">{t.sections.writingKicker}</div>
+      <h1>{lang === "zh" ? "输出不是附属品，而是第二套研究记录" : "Public writing is a second research record"}</h1>
+      <p>{t.sections.writingTitle}</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="shell writing-layout">
+      <div class="article-list">
+        {writing.map((entry) => (
+          <article class="article-card">
+            <time datetime={entry.data.publishedAt.toISOString()}>
+              {entry.data.publishedAt.toISOString().slice(0, 10)}<br />{entry.data.readingMinutes} MIN
+            </time>
+            <div>
+              <h3><a href={`/${lang}/writing/${entry.data.slug}/`}>{entry.data.title}</a></h3>
+              <p>{entry.data.summary}</p>
+              <div class="tag-row">{entry.data.tags.map((tag) => <span>#{tag}</span>)}</div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div>
+        <div class="platform-list">
+          {platforms[lang].map((platform) => (
+            <article class="platform-card">
+              <div class="platform-label"><span>{platform.name}</span><span>PUBLIC OUTREACH ↗</span></div>
+              <h3><a href={platform.url} target="_blank" rel="noreferrer">{platform.handle}</a></h3>
+              <p>{platform.note}</p>
+              <div class="platform-metrics">{platform.metrics.map((metric) => <span>{metric}</span>)}</div>
+            </article>
+          ))}
+        </div>
+        <p class="data-note">{t.dataNote}</p>
+      </div>
+    </div>
+  </section>
+  <ContactPanel lang={lang} />
+</BaseLayout>

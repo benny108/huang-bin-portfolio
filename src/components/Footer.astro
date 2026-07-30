@@ -1,0 +1,30 @@
+---
+import { copy } from "@/lib/i18n";
+import type { Lang } from "@/lib/models";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div>
+      <div class="footer-name">{lang === "zh" ? "黄彬" : "Bin Huang"}</div>
+      <p>{t.footer}</p>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:1084893712@qq.com">Email</a>
+      <a href="https://github.com/benny108" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://www.zhihu.com/people/42-29-40-28" target="_blank" rel="noreferrer">Zhihu</a>
+      <a href="https://space.bilibili.com/3493106871700084" target="_blank" rel="noreferrer">Bilibili</a>
+    </div>
+    <div class="footer-legal">
+      <span>© {new Date().getFullYear()} Bin Huang</span>
+      <span>{lang === "zh" ? "代码 MIT · 内容与素材保留版权" : "Code MIT · Content & assets reserved"}</span>
+    </div>
+  </div>
+</footer>

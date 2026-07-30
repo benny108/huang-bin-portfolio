@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { entryHref, statusLabels } from "@/lib/content";
+import type { Lang } from "@/lib/models";
+
+interface Props {
+  entry: CollectionEntry<"publications">;
+  lang: Lang;
+  compact?: boolean;
+}
+
+const { entry, lang, compact = false } = Astro.props;
+const d = entry.data;
+---
+
+<article class:list={["publication-card", compact && "compact"]} data-status={d.status}>
+  <div class="card-topline">
+    <span class={`status status-${d.status}`}>{statusLabels[lang][d.status]}</span>
+    <span>{d.year}</span>
+  </div>
+  <h3><a href={entryHref(lang, "research", d.slug)}>{d.title}</a></h3>
+  <p>{d.summary}</p>
+  <div class="role-row">
+    <strong>{d.role}</strong>
+    <span>{d.venue}</span>
+  </div>
+  {!compact && (
+    <div class="metric-chips">
+      {d.metrics.slice(0, 3).map((metric) => <span>{metric}</span>)}
+    </div>
+  )}
+  <div class="tag-row">
+    {d.tags.slice(0, 3).map((tag) => <span>#{tag}</span>)}
+  </div>
+</article>
