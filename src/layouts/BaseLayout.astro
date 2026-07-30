@@ -12,6 +12,7 @@ interface Props {
   image?: string;
   article?: boolean;
   minimal?: boolean;
+  editorial?: boolean;
 }
 
 const {
@@ -20,7 +21,8 @@ const {
   description = copy[lang].meta.description,
   image,
   article = false,
-  minimal = false
+  minimal = false,
+  editorial = false
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -75,7 +77,7 @@ const structuredData = {
     <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <title>{title}</title>
   </head>
-  <body class:list={{ "minimal-site": minimal }}>
+  <body class:list={{ "minimal-site": minimal, "editorial-site": editorial }}>
     <a class="skip-link" href="#main-content">{lang === "zh" ? "跳到正文" : "Skip to content"}</a>
     {!minimal && <Header lang={lang} />}
     <main id="main-content">

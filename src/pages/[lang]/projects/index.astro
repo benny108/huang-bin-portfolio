@@ -2,6 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ProjectCard from "@/components/ProjectCard.astro";
 import ContactPanel from "@/components/ContactPanel.astro";
+import "@/styles/editorial-pages.css";
 import { copy, languages } from "@/lib/i18n";
 import { getLocalizedCollection } from "@/lib/content";
 import type { Lang } from "@/lib/models";
@@ -15,6 +16,12 @@ const t = copy[lang];
 const order = ["tcm-knowledge-graph", "xfusion-agent-profile", "inference-production-gate", "nebula-overseas-gtm"];
 const projects = (await getLocalizedCollection("projects", lang))
   .sort((a, b) => order.indexOf(a.data.slug) - order.indexOf(b.data.slug));
+const projectStats = [
+  [String(projects.length), lang === "zh" ? "个完整案例" : "documented cases"],
+  ["33,214", lang === "zh" ? "知识图谱实体" : "knowledge-graph entities"],
+  ["2.35×", lang === "zh" ? "推理阶段加速" : "inference-stage speedup"],
+  [lang === "zh" ? "8 台 / 4 万" : "8 units / ¥40K", lang === "zh" ? "销量 / 净利润" : "sales / net profit"]
+];
 ---
 
 <BaseLayout
@@ -22,15 +29,25 @@ const projects = (await getLocalizedCollection("projects", lang))
   title={lang === "zh" ? "工程与业务案例｜黄彬" : "Engineering & Business Cases | Bin Huang"}
   description={t.sections.projectBody}
   image="/og.png"
+  editorial
 >
-  <header class="page-hero">
+  <header class="page-hero editorial-page-hero">
     <div class="shell">
-      <div class="kicker">{t.sections.projectKicker}</div>
-      <h1>{lang === "zh" ? "不止证明“做过”，还要说明为什么有效" : "Not just what I built—but why it worked"}</h1>
-      <p>{t.sections.projectBody}</p>
+      <div class="editorial-marker">02 / PROJECTS</div>
+      <h1>{lang === "zh" ? "我做过的系统，以及它们解决的问题" : "Systems I have built and the problems they addressed"}</h1>
+      <p>
+        {lang === "zh"
+          ? "这些案例来自知识图谱、企业 Agent、生成模型推理和海外产品工作。每个案例都写清楚我的职责、方法、结果和公开边界。"
+          : "These cases span knowledge graphs, enterprise agents, generative-model inference, and overseas product work. Each one states my role, approach, results, and public boundary."}
+      </p>
+      <div class="editorial-hero-stats" aria-label={lang === "zh" ? "项目概览" : "Project overview"}>
+        {projectStats.map(([value, label]) => (
+          <span><strong>{value}</strong><small>{label}</small></span>
+        ))}
+      </div>
     </div>
   </header>
-  <section class="section">
+  <section class="section editorial-index-section">
     <div class="shell project-stack">
       {projects.map((entry, index) => <ProjectCard entry={entry} lang={lang} index={index} />)}
     </div>

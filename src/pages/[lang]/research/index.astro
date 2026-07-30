@@ -2,6 +2,7 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PublicationCard from "@/components/PublicationCard.astro";
 import ContactPanel from "@/components/ContactPanel.astro";
+import "@/styles/editorial-pages.css";
 import { copy, languages } from "@/lib/i18n";
 import { getLocalizedCollection } from "@/lib/content";
 import type { Lang } from "@/lib/models";
@@ -21,6 +22,21 @@ const filters = [
   ["shared_task", lang === "zh" ? "共享任务" : "Shared Tasks"],
   ["manuscript", lang === "zh" ? "研究稿件" : "Manuscripts"]
 ];
+const researchStats = [
+  [String(publications.length), lang === "zh" ? "项研究记录" : "research records"],
+  [
+    String(publications.filter((entry) => ["published", "accepted"].includes(entry.data.status)).length),
+    lang === "zh" ? "已发表 / 录用" : "published / accepted"
+  ],
+  [
+    String(publications.filter((entry) => entry.data.status === "under_review").length),
+    lang === "zh" ? "审稿中" : "under review"
+  ],
+  [
+    String(publications.filter((entry) => entry.data.status === "shared_task").length),
+    lang === "zh" ? "共享任务系统" : "shared-task systems"
+  ]
+];
 ---
 
 <BaseLayout
@@ -28,16 +44,26 @@ const filters = [
   title={lang === "zh" ? "研究成果｜黄彬" : "Research | Bin Huang"}
   description={t.sections.researchBody}
   image="/og.png"
+  editorial
 >
-  <header class="page-hero">
+  <header class="page-hero editorial-page-hero">
     <div class="shell">
-      <div class="kicker">{t.sections.researchKicker}</div>
-      <h1>{lang === "zh" ? "让方法、证据与个人贡献站在一起" : "Methods, evidence, and personal contribution—together"}</h1>
-      <p>{t.sections.researchBody}</p>
+      <div class="editorial-marker">01 / RESEARCH</div>
+      <h1>{lang === "zh" ? "我在研究什么，以及每项工作具体做了什么" : "What I study, and what I contributed to each piece of work"}</h1>
+      <p>
+        {lang === "zh"
+          ? "这里收录论文、共享任务和研究稿件。状态、作者角色和结果指标都按目前能公开的证据填写。"
+          : "This page collects papers, shared-task systems, and manuscripts. Status, authorship, and results follow the evidence I can currently make public."}
+      </p>
+      <div class="editorial-hero-stats" aria-label={lang === "zh" ? "研究概览" : "Research overview"}>
+        {researchStats.map(([value, label]) => (
+          <span><strong>{value}</strong><small>{label}</small></span>
+        ))}
+      </div>
     </div>
   </header>
 
-  <section class="section">
+  <section class="section editorial-index-section">
     <div class="shell">
       <div class="filter-bar" role="group" aria-label={lang === "zh" ? "筛选论文状态" : "Filter publication status"}>
         {filters.map(([value, label], index) => (

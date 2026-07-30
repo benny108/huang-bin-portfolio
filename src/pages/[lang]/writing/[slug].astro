@@ -2,6 +2,7 @@
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ContactPanel from "@/components/ContactPanel.astro";
+import "@/styles/editorial-pages.css";
 import type { Lang } from "@/lib/models";
 
 export async function getStaticPaths() {
@@ -18,9 +19,10 @@ const { Content } = await render(entry);
 const d = entry.data;
 ---
 
-<BaseLayout lang={lang} title={`${d.title}｜${lang === "zh" ? "黄彬" : "Bin Huang"}`} description={d.summary} article image="/og.png">
+<BaseLayout lang={lang} title={`${d.title}｜${lang === "zh" ? "黄彬" : "Bin Huang"}`} description={d.summary} article image="/og.png" editorial>
   <header class="detail-lede">
     <div class="shell">
+      <a class="editorial-back" href={`/${lang}/writing/`}>← {lang === "zh" ? "写作" : "Writing"}</a>
       <div class="kicker">{d.publishedAt.toISOString().slice(0, 10)} · {d.readingMinutes} MIN</div>
       <h1>{d.title}</h1>
       <p>{d.summary}</p>

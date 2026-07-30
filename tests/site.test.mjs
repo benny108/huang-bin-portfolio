@@ -45,6 +45,32 @@ test("primary routes and content details are generated", async () => {
   }
 });
 
+test("research, project, and writing pages share the editorial system", async () => {
+  const zhResearch = await text("client/zh/research/index.html");
+  const enProjects = await text("client/en/projects/index.html");
+  const zhWriting = await text("client/zh/writing/index.html");
+  const researchDetail = await text("client/en/research/firewallm/index.html");
+  const projectDetail = await text("client/zh/projects/tcm-knowledge-graph/index.html");
+  const writingDetail = await text("client/zh/writing/radad-deep-dive/index.html");
+
+  assert.match(zhResearch, /我在研究什么，以及每项工作具体做了什么/);
+  assert.match(enProjects, /Systems I have built and the problems they addressed/);
+  assert.match(zhWriting, /我怎样记录实验，也怎样把技术讲给更多人听/);
+
+  for (const page of [zhResearch, enProjects, zhWriting, researchDetail, projectDetail, writingDetail]) {
+    assert.match(page, /editorial-site/);
+    assert.match(page, /<style>/);
+    assert.doesNotMatch(page, /<link[^>]+rel="stylesheet"/);
+  }
+
+  assert.match(zhResearch, /01 \/ RESEARCH/);
+  assert.match(enProjects, /02 \/ PROJECTS/);
+  assert.match(zhWriting, /03 \/ WRITING/);
+  assert.match(researchDetail, /editorial-back/);
+  assert.match(projectDetail, /editorial-back/);
+  assert.match(writingDetail, /editorial-back/);
+});
+
 test("public HTML excludes private identifiers", async () => {
   const pages = [
     await text("client/zh/index.html"),

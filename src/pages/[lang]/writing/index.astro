@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import ContactPanel from "@/components/ContactPanel.astro";
+import "@/styles/editorial-pages.css";
 import { copy, languages, platforms } from "@/lib/i18n";
 import { getLocalizedCollection } from "@/lib/content";
 import type { Lang } from "@/lib/models";
@@ -13,6 +14,12 @@ const { lang } = Astro.props as { lang: Lang };
 const t = copy[lang];
 const writing = (await getLocalizedCollection("writing", lang))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const writingStats = [
+  [String(writing.length), lang === "zh" ? "篇站内长文" : "long-form essays"],
+  ["61", lang === "zh" ? "篇知乎文章" : "Zhihu articles"],
+  ["251", lang === "zh" ? "个 B 站投稿" : "Bilibili uploads"],
+  [lang === "zh" ? "12 万+" : "120K+", lang === "zh" ? "累计播放" : "total views"]
+];
 ---
 
 <BaseLayout
@@ -20,15 +27,25 @@ const writing = (await getLocalizedCollection("writing", lang))
   title={lang === "zh" ? "写作与公开传播｜黄彬" : "Writing & Outreach | Bin Huang"}
   description={t.sections.writingTitle}
   image="/og.png"
+  editorial
 >
-  <header class="page-hero">
+  <header class="page-hero editorial-page-hero">
     <div class="shell">
-      <div class="kicker">{t.sections.writingKicker}</div>
-      <h1>{lang === "zh" ? "输出不是附属品，而是第二套研究记录" : "Public writing is a second research record"}</h1>
-      <p>{t.sections.writingTitle}</p>
+      <div class="editorial-marker">03 / WRITING</div>
+      <h1>{lang === "zh" ? "我怎样记录实验，也怎样把技术讲给更多人听" : "How I document experiments and explain technical work"}</h1>
+      <p>
+        {lang === "zh"
+          ? "这里放技术文章和公开平台内容。我更关心把问题讲清楚，而不是把术语写得复杂。"
+          : "This page brings together technical essays and public-platform work. I care more about making the problem clear than making the language sound complicated."}
+      </p>
+      <div class="editorial-hero-stats" aria-label={lang === "zh" ? "写作概览" : "Writing overview"}>
+        {writingStats.map(([value, label]) => (
+          <span><strong>{value}</strong><small>{label}</small></span>
+        ))}
+      </div>
     </div>
   </header>
-  <section class="section">
+  <section class="section editorial-index-section">
     <div class="shell writing-layout">
       <div class="article-list">
         {writing.map((entry) => (
