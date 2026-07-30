@@ -2,6 +2,8 @@
 
 黄彬的中英双语研究工程个人网站，面向 LLM / Agent 技术实习、科研合作、未来博士申请与公开技术传播。
 
+公开访问：[https://benny108.github.io](https://benny108.github.io)
+
 ## 网站定位
 
 > 把 LLM 研究做成可运行系统，把技术方案推进到真实业务结果。
@@ -43,6 +45,13 @@ pnpm test
 - `dist/client/`：静态页面与公开资源
 - `dist/server/index.js`：Sites Worker 入口
 - `dist/.openai/hosting.json`：Sites 托管元数据
+
+## 部署
+
+- 源码仓库：`benny108/huang-bin-portfolio`
+- 公开站点：GitHub Pages 根站点 `benny108.github.io`
+- Sites：使用 `.openai/hosting.json` 关联站点，提交源码、打包构建产物、保存版本后再部署
+- 公开站点不依赖数据库、登录或环境变量；发布前必须再次执行 `pnpm test`
 
 ## 新增或更新内容
 
