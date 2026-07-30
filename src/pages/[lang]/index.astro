@@ -48,9 +48,17 @@ const interests = lang === "zh"
 const briefFacts = lang === "zh"
   ? [["5+", "第一作者研究"], ["2.35×", "推理加速"], ["33,214", "图谱实体"]]
   : [["5+", "first-author works"], ["2.35×", "inference speedup"], ["33,214", "KG entities"]];
-const education = t.timeline.filter((item) =>
-  lang === "zh" ? item.title.includes("大学") : item.title.includes("University")
-);
+const education = t.timeline
+  .filter((item) => lang === "zh" ? item.title.includes("大学") : item.title.includes("University"))
+  .map((item) => ({
+    ...item,
+    logo: item.title.includes("郑州") || item.title.includes("Zhengzhou")
+      ? "/education/zzu.png"
+      : "/education/gzhu.jpg",
+    logoAlt: item.title.includes("郑州") || item.title.includes("Zhengzhou")
+      ? (lang === "zh" ? "郑州大学校徽" : "Zhengzhou University logo")
+      : (lang === "zh" ? "广州大学校徽" : "Guangzhou University logo")
+  }));
 ---
 
 <BaseLayout lang={lang} image="/og.png" minimal>
@@ -136,6 +144,7 @@ const education = t.timeline.filter((item) =>
           <div class="academic-education-list">
             {education.map((item) => (
               <article>
+                <img src={item.logo} alt={item.logoAlt} width="252" height="252" loading="lazy" />
                 <time>{item.period}</time>
                 <div>
                   <h3>{item.title}</h3>

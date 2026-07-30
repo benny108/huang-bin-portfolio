@@ -91,6 +91,7 @@ src/content/writing/en/example.mdx
 - 奖状只提交脱敏衍生图，不提交原件；
 - 不公开客户身份、合同、业务 LoRA、内部路径与企业源代码；
 - `private/`、`source-materials/`、带“原件/未脱敏”字样的内容已加入 `.gitignore`。
+- 教育经历使用的校徽取自[郑州大学文化标识页](https://www.zzu.edu.cn/xxgk/whbs.htm)与[广州大学校训校徽页](https://www.gzhu.edu.cn/xxgk/xxxhxg.htm)，仅用于本人教育经历识别，相关标识权利归学校所有。
 
 ## 开源与版权
 

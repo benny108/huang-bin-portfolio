@@ -1789,10 +1789,21 @@ h4 {
 
 .academic-education-list article {
   display: grid;
-  grid-template-columns: 152px minmax(0, 1fr);
-  gap: 22px;
+  grid-template-columns: 42px 140px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
   padding: 17px 0;
   border-top: 1px solid #e7eaf0;
+}
+
+.academic-education-list img {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e1e5eb;
+  border-radius: 50%;
+  background: white;
+  object-fit: contain;
+  filter: saturate(0.82);
 }
 
 .academic-education-list time {
@@ -2060,8 +2071,17 @@ h4 {
   }
 
   .academic-education-list article {
-    grid-template-columns: 1fr;
-    gap: 5px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 6px 14px;
+  }
+
+  .academic-education-list time {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .academic-education-list article > div {
+    grid-column: 2;
   }
 
   .academic-list-meta {
