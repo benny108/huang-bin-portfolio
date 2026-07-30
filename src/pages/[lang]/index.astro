@@ -48,6 +48,9 @@ const interests = lang === "zh"
 const briefFacts = lang === "zh"
   ? [["5+", "第一作者研究"], ["2.35×", "推理加速"], ["33,214", "图谱实体"]]
   : [["5+", "first-author works"], ["2.35×", "inference speedup"], ["33,214", "KG entities"]];
+const education = t.timeline.filter((item) =>
+  lang === "zh" ? item.title.includes("大学") : item.title.includes("University")
+);
 ---
 
 <BaseLayout lang={lang} image="/og.png" minimal>
@@ -122,6 +125,24 @@ const briefFacts = lang === "zh"
           <h2 class="academic-section-title">{lang === "zh" ? "研究兴趣" : "Research Interests"}</h2>
           <div class="academic-interest-list">
             {interests.map((interest) => <span>{interest}</span>)}
+          </div>
+        </section>
+
+        <section class="academic-section">
+          <div class="academic-section-head">
+            <h2 class="academic-section-title">{lang === "zh" ? "教育经历" : "Education"}</h2>
+            <a href={`/${lang}/about/`}>{lang === "zh" ? "完整经历" : "Full profile"} →</a>
+          </div>
+          <div class="academic-education-list">
+            {education.map((item) => (
+              <article>
+                <time>{item.period}</time>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.meta}</p>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 

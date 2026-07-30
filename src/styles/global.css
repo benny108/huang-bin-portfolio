@@ -1783,6 +1783,35 @@ h4 {
   content: "";
 }
 
+.academic-education-list {
+  display: grid;
+}
+
+.academic-education-list article {
+  display: grid;
+  grid-template-columns: 152px minmax(0, 1fr);
+  gap: 22px;
+  padding: 17px 0;
+  border-top: 1px solid #e7eaf0;
+}
+
+.academic-education-list time {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+}
+
+.academic-education-list h3 {
+  margin-bottom: 4px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.academic-education-list p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .academic-section-head {
   display: flex;
   align-items: baseline;
@@ -2028,6 +2057,11 @@ h4 {
   .academic-list-item {
     grid-template-columns: 1fr;
     gap: 11px;
+  }
+
+  .academic-education-list article {
+    grid-template-columns: 1fr;
+    gap: 5px;
   }
 
   .academic-list-meta {
