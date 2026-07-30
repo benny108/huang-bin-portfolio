@@ -22,6 +22,9 @@ test("Chinese and English home pages contain the positioning", async () => {
   assert.match(en, /I turn LLM research into working systems/);
   assert.match(zh, /\/profile\/huang-bin-avatar\.jpg/);
   assert.match(en, /Portrait of Bin Huang/);
+  assert.match(zh, /<style>/);
+  assert.doesNotMatch(zh, /<link[^>]+rel="stylesheet"/);
+  assert.doesNotMatch(en, /<link[^>]+rel="stylesheet"/);
   assert.equal((await stat(resolve(dist, "client/profile/huang-bin.jpg"))).isFile(), true);
 });
 

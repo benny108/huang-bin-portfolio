@@ -8,6 +8,9 @@ export default defineConfig({
   site,
   output: "static",
   outDir: "./dist/client",
+  build: {
+    inlineStylesheets: "always"
+  },
   integrations: [
     mdx(),
     sitemap({
