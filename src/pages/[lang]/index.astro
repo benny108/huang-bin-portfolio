@@ -12,7 +12,7 @@ export function getStaticPaths() {
 const { lang } = Astro.props as { lang: Lang };
 const t = copy[lang];
 const alternate = lang === "zh" ? "en" : "zh";
-const publicationOrder = ["radad", "finance-agent", "tcm-llm", "firewallm"];
+const publicationOrder = ["skillscope", "radad", "finance-agent", "tcm-llm", "firewallm"];
 const publications = (await getLocalizedCollection("publications", lang))
   .filter((entry) => entry.data.featured)
   .sort((a, b) => publicationOrder.indexOf(a.data.slug) - publicationOrder.indexOf(b.data.slug));
@@ -270,7 +270,7 @@ const education = t.timeline
             <a href={`/${lang}/research/`}>{lang === "zh" ? "全部研究" : "View all"} →</a>
           </div>
           <div class="academic-list">
-            {publications.slice(0, 4).map((entry) => (
+            {publications.slice(0, 5).map((entry) => (
               <article class="academic-list-item">
                 <div>
                   <h3><a href={`/${lang}/research/${entry.data.slug}/`}>{entry.data.title}</a></h3>

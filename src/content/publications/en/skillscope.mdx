@@ -1,0 +1,28 @@
+---
+lang: "en"
+slug: "skillscope"
+title: "When Procedural Skills Hurt: Stress-Testing Skill Prompts for Small Language Agents"
+summary: "SkillScope treats a procedural skill as a controlled intervention for a target student model, comparing full, partial, semantically selected, and token-matched random exposures to diagnose when long prompts hurt small agents."
+year: 2026
+status: "manuscript"
+role: "Author (anonymous submission)"
+venue: "Preparing for COLING 2026"
+featured: true
+tags: ["Language Agents", "Prompt Evaluation", "Negative Transfer"]
+metrics: ["SWE-Skills-Bench: negative transfer in 7/15 pairs", "Qwen3-4B best partial exposure: 83.41%", "SkillsBench: random controls match or exceed full on 19/19 tasks"]
+contributions: ["Formulated target-student response-surface profiling, treating a skill as controlled block-level interventions rather than an indivisible prompt", "Implemented the SkillScope certification protocol with a frozen student, harness, task distribution, and executable verifier", "Used partial exposure, non-monotonicity, random-budget controls, and failure signatures to characterize the negative-transfer boundary of full skills"]
+---
+
+## Research question
+
+Procedural skills can transfer workflow knowledge to small language agents, but a full skill is not necessarily safe for every target model. SkillScope asks how much of the same skill should be exposed to a fixed student before there is enough evidence to support deployment.
+
+## Method
+
+- Decompose a candidate skill into semantic blocks and construct full, prefix, semantic-selection, and random exposure conditions under explicit token budgets
+- Freeze the student model, agent harness, task distribution, and executable verifier so that model, tool, and evaluator changes do not enter the comparison
+- Record response surfaces, negative transfer, non-monotonicity, random controls, and failure signatures for the target student
+
+## Results and boundaries
+
+Across SWE-Skills-Bench, full skills show negative transfer in 7 of 15 model–family pairs. In the 210-row Qwen3-4B audit, the best candidate partial exposure reaches 83.41% versus 73.94% for the full skill; across 19 expanded SkillsBench tasks, sub-full random controls match or exceed full skills on all 19. This page shows only sanitized evidence from the submission package; the COLING paper and supplementary PDF are not distributed here.

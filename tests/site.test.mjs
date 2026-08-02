@@ -36,6 +36,7 @@ test("primary routes and content details are generated", async () => {
   const paths = [
     "client/zh/research/index.html",
     "client/en/projects/index.html",
+    "client/zh/research/skillscope/index.html",
     "client/zh/writing/radad-deep-dive/index.html",
     "client/en/research/firewallm/index.html",
     "client/zh/about/index.html"
@@ -69,6 +70,17 @@ test("research, project, and writing pages share the editorial system", async ()
   assert.match(researchDetail, /editorial-back/);
   assert.match(projectDetail, /editorial-back/);
   assert.match(writingDetail, /editorial-back/);
+});
+
+test("new COLING manuscript is listed without distributing submission PDFs", async () => {
+  const zh = await text("client/zh/research/skillscope/index.html");
+  const en = await text("client/en/research/skillscope/index.html");
+  assert.match(zh, /SkillScope/);
+  assert.match(zh, /COLING 2026 投稿准备中/);
+  assert.match(en, /Preparing for COLING 2026/);
+  assert.match(zh, /不公开 COLING 投稿 PDF/);
+  assert.doesNotMatch(zh, /skillscope_arr_anonymous\.pdf/);
+  assert.doesNotMatch(zh, /skillscope_arr_supplementary\.pdf/);
 });
 
 test("public HTML excludes private identifiers", async () => {

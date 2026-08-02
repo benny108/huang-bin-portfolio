@@ -1,0 +1,28 @@
+---
+lang: "zh"
+slug: "skillscope"
+title: "When Procedural Skills Hurt：面向小型语言 Agent 的技能提示压力测试"
+summary: "SkillScope 把程序化技能视为面向目标学生模型的可控干预，比较完整技能、部分暴露、语义筛选与 token 匹配的随机压缩，诊断长提示何时会伤害小型 Agent。"
+year: 2026
+status: "manuscript"
+role: "作者（匿名投稿）"
+venue: "COLING 2026 投稿准备中"
+featured: true
+tags: ["Language Agents", "Prompt Evaluation", "Negative Transfer"]
+metrics: ["SWE-Skills-Bench：7/15 组合出现负迁移", "Qwen3-4B 最佳部分暴露 83.41%", "SkillsBench：19/19 随机控制不低于完整技能"]
+contributions: ["提出 target-student response-surface profiling，将技能拆成可控的块级干预而不是不可拆分的提示词", "实现 SkillScope 认证协议，在固定学生模型、任务、harness 与 verifier 下比较不同暴露掩码", "用部分暴露、非单调曲线、随机预算控制和失败签名刻画完整技能的负迁移边界"]
+---
+
+## 研究问题
+
+程序化技能可以把工作流知识传给小型语言 Agent，但完整技能并不一定适合每一个目标模型。SkillScope 关注的不是“技能有没有用”，而是同一个技能在固定学生模型上暴露多少、以什么方式暴露，才有足够证据支持部署。
+
+## 研究方法
+
+- 把候选技能拆成语义块，在明确 token 预算下构造完整、前缀、语义筛选和随机暴露条件
+- 固定学生模型、Agent harness、任务分布与可执行 verifier，避免把模型、工具或评测器变化混入结论
+- 用 response surface、负迁移、非单调性、随机控制和 failure signature 记录目标学生的反应
+
+## 结果与边界
+
+在 SWE-Skills-Bench 中，完整技能在 15 个模型–家族组合中的 7 个出现负迁移；在 Qwen3-4B 的 210 行审计中，最佳候选部分暴露达到 83.41%，完整技能为 73.94%；扩展 SkillsBench 的 19 个任务中，sub-full random control 均达到或超过完整技能。页面只展示投稿材料中的脱敏摘要和结果，不公开 COLING 投稿 PDF 或补充材料原文。
