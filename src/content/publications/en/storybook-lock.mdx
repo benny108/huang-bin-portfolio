@@ -1,0 +1,30 @@
+---
+lang: "en"
+slug: "storybook-lock"
+title: "Storybook-Lock: A Prompt-Compiled Agentic Backbone for Fast One-Line-to-Long-Video Generation"
+summary: "A checkable workflow that compiles one-line story intent into multi-shot video with Style/Identity Locks, first-frame review, shot-local repair, and CaptionLock over replaceable image and video backends."
+year: 2026
+status: "manuscript"
+role: "Author (anonymous submission)"
+venue: "Preparing for COLING 2026"
+featured: true
+tags: ["Agentic Systems", "Video Generation", "Prompt Compilation"]
+metrics: ["6 accepted artifacts · 56 shots", "283.50 s output · 20.16 s / accepted shot", "Within-shot DINOv2 proxy 0.9456 ± 0.0103"]
+contributions: ["Formulated one-line-to-long-video generation as prompt compilation with global constraints, ordered shot records, inference parameters, review stages, and recovery policy", "Designed a hierarchical Codex + skill control graph that operationalizes Style Lock, Identity Lock, first-frame gating, and shot-local recovery over replaceable backends", "Implemented CaptionLock, compiling ASR timing and approved bilingual text into a deterministic subtitle program with non-overlapping cues", "Built an evidence-bounded local case study with accepted artifacts, contact sheets, timing records, static audits, and repair traces"]
+---
+
+## Research question
+
+A user may provide only one sentence, while a long video still needs a narrative arc, recurring characters, shot order, dialogue, rendering parameters, and a recovery policy. Independent generation per shot can cause identity and composition drift; checking only after assembly can turn one bad clip into an episode-wide retry. Storybook-Lock asks how to make this pipeline inspectable and recoverable without changing the underlying generators.
+
+## Method
+
+- Codex and reusable skills expand a compact intent into a typed storyboard with global Style/Identity Locks, carried state, and ordered shot records
+- First frames are generated and reviewed before Qwen-Image and LTX-family image-to-video calls; failed shots are repaired locally while accepted neighbors are retained
+- CaptionLock compiles ASR timestamps and approved bilingual text into a subtitle program, separating text presentation from visual synthesis
+
+## Results and boundaries
+
+The local case study contains 6 accepted artifacts, 56 shots, and 283.50 seconds of output. Recorded image and I2V stages average 3.15 and 17.01 seconds per shot, or 20.16 seconds per accepted shot. Four complete pilots yield a within-shot DINOv2 proxy of 0.9456 ± 0.0103 and a boundary proxy of 0.7306 ± 0.0488; sampled OCR-positive and black-frame ratios are both zero. A static audit covers field completeness, dialogue carryover, entity mentions, and uploaded-image anchors in 32 storyboard records.
+
+These are auditable local operating points, not universal API speed or cost claims and not model-level identity guarantees. Timing excludes human review, queueing, cold starts, rejected renders, and cost; no matched baseline or ablation isolates each module. This is still an anonymous submission-preparation manuscript, so the public page shows only sanitized evidence and boundaries rather than the paper or supplementary PDF.

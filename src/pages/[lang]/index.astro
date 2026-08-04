@@ -12,7 +12,7 @@ export function getStaticPaths() {
 const { lang } = Astro.props as { lang: Lang };
 const t = copy[lang];
 const alternate = lang === "zh" ? "en" : "zh";
-const publicationOrder = ["skillscope", "radad", "finance-agent", "tcm-llm", "firewallm"];
+const publicationOrder = ["storybook-lock", "skillscope", "radad", "finance-agent", "tcm-llm", "firewallm"];
 const publications = (await getLocalizedCollection("publications", lang))
   .filter((entry) => entry.data.featured)
   .sort((a, b) => publicationOrder.indexOf(a.data.slug) - publicationOrder.indexOf(b.data.slug));

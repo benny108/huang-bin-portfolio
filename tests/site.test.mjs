@@ -37,6 +37,7 @@ test("primary routes and content details are generated", async () => {
     "client/zh/research/index.html",
     "client/en/projects/index.html",
     "client/zh/research/skillscope/index.html",
+    "client/zh/research/storybook-lock/index.html",
     "client/zh/writing/radad-deep-dive/index.html",
     "client/en/research/firewallm/index.html",
     "client/zh/about/index.html"
@@ -81,6 +82,17 @@ test("new COLING manuscript is listed without distributing submission PDFs", asy
   assert.match(zh, /不公开 COLING 投稿 PDF/);
   assert.doesNotMatch(zh, /skillscope_arr_anonymous\.pdf/);
   assert.doesNotMatch(zh, /skillscope_arr_supplementary\.pdf/);
+});
+
+test("new Storybook-Lock manuscript is listed without distributing its anonymous PDF", async () => {
+  const zh = await text("client/zh/research/storybook-lock/index.html");
+  const en = await text("client/en/research/storybook-lock/index.html");
+  assert.match(zh, /Storybook-Lock/);
+  assert.match(zh, /COLING 2026 投稿准备中/);
+  assert.match(en, /Preparing for COLING 2026/);
+  assert.match(zh, /不提供 PDF 或补充材料原文/);
+  assert.doesNotMatch(zh, /storybook_lock_packed_arr2026/);
+  assert.doesNotMatch(zh, /paper\.pdf/);
 });
 
 test("public HTML excludes private identifiers", async () => {
